@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Title</title>
+    <link href="style.css" rel="stylesheet" type="text/css" >
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBrcdSOA1oClARGoG6Y3w6GgMAr_Awtduw",
+            authDomain: "sungai-buloh.firebaseapp.com",
+            databaseURL: "https://sungai-buloh-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "sungai-buloh",
+            storageBucket: "sungai-buloh.appspot.com",
+            messagingSenderId: "431778937928",
+            appId: "1:431778937928:web:161d4237ff3935ac272c7d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+
+        import { getStorage, ref, getDownloadURL } from
+            "https://www.gstatic.com/firebasejs/10.6.0/firebase-storage.js"
+            // Create a reference to the file we want to download
+            const storage = getStorage(app);
+            const imageRef = ref(storage, 'images/wand2m9ds0ckERRL7efZSZM5aD12/1706515231-cam.png');
+            // Get the download URL
+            getDownloadURL(imageRef)
+                .then((url) => {
+                // Insert url into an <img> tag to "download"
+                console.log(`Web path ${url}`);
+                //find a place to update the html
+            document.getElementById("firebase-img").src = url;
+            })
+            .catch((error) => {
+                switch (error.code) {
+                case 'storage/object-not-found':
+                    console.log("doesn't exist")
+                    break;
+                case 'storage/unauthorized':
+                    console.log("doesn't have permission")
+                    break;
+                case 'storage/canceled':
+                    console.log("canceled")
+                    break;
+                    // ...
+                case 'storage/unknown':
+                    console.log("idk man")
+                    break;
+            }
+        });
+      </script>
+
+</head>
+<body>
+    <img src="" id="firebase-img">
+</body>
+</html>
