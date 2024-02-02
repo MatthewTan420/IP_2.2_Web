@@ -23,42 +23,173 @@
             appId: "1:431778937928:web:161d4237ff3935ac272c7d"
         };
 
-        const app = initializeApp(firebaseConfig);
+        class userID { 
+            static userID = "";
+        }
 
-        import { getStorage, ref, getDownloadURL } from
+        var number = 0;
+        var listNumber = 0;
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        import {
+            getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut
+            } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+            const auth = getAuth();
+                
+                
+            //listens for changes in the authentication state.
+            onAuthStateChanged(auth, (currentUser) => {
+                if (currentUser) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/firebase.User
+                    const uid = currentUser.uid;
+                    console.log(`(OnAuthStateChanged) Current user is logged in:
+                ${currentUser.email} :: ${currentUser.uid}`)
+                    console.log(userID.userID);
+                    userID.userID = currentUser.uid;
+                    console.log(userID.userID);
+                } else {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(`ErrorCode: ${errorCode} -> Message: ${errorMessage}`);
+                }
+            });
+
+        import { getStorage, ref, getDownloadURL, listAll } from
             "https://www.gstatic.com/firebasejs/10.6.0/firebase-storage.js"
             // Create a reference to the file we want to download
-            const storage = getStorage(app);
-            const imageRef = ref(storage, 'images/wand2m9ds0ckERRL7efZSZM5aD12/1706515231-cam.png');
+            
+            //const listRef = ref(storage, `images/${ID}`);
             // Get the download URL
-            getDownloadURL(imageRef)
+            
+
+        import {
+        getDatabase, child, get,set,onValue,push,update,remove, ref as fbRef
+        } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+
+        var addUserToDatabase = document.getElementById("frmCreateData");
+        if (addUserToDatabase != null){
+            addUserToDatabase.addEventListener("submit", function(e){
+            e.preventDefault();
+            const storage = getStorage(app);
+            const storageRef = ref(storage, 'images');
+            //const imageRef = ref(storage, 'images/wand2m9ds0ckERRL7efZSZM5aD12/1706515231-cam.png');
+            const listRef = ref(storage, 'images/' + userID.userID);
+            /*getDownloadURL(imageRef)
                 .then((url) => {
                 // Insert url into an <img> tag to "download"
                 console.log(`Web path ${url}`);
                 //find a place to update the html
-            document.getElementById("firebase-img").src = url;
+                document.getElementById("firebase-img-0").src = url;
+                })
+                .catch((error) => {
+                    switch (error.code) {
+                    case 'storage/object-not-found':
+                        console.log("doesn't exist")
+                        break;
+                    case 'storage/unauthorized':
+                        console.log("doesn't have permission")
+                        break;
+                    case 'storage/canceled':
+                        console.log("canceled")
+                        break;
+                        // ...
+                    case 'storage/unknown':
+                        console.log("idk man")
+                        break;
+                    }
+                });*/
+
+            listAll(listRef)
+                .then((res) => {
+                    createData();
+                    number = res.items.length;
+                    console.log(number);
+                    res.prefixes.forEach((folderRef) => {
+                    // All the prefixes under listRef.
+                    // You may call listAll() recursively on them.
+                    console.log(`Folder name: ${folderRef._location.path_}`);
+                    listFilesInFolder(folderRef)
+                });
+                res.items.forEach((itemRef) => {
+                    console.log(`Item Path: ${itemRef._location.path_} in folder ${listRef}` );
+                    createImg(itemRef._location.path_);
+                    const imageRef = ref(storage, itemRef._location.path_);
+                    if (listNumber < res.items.length) {
+                        duplicateImg(listNumber, imageRef);
+                        listNumber += 1;
+                    }
+                });
+                }).catch((error) => {
+                    console.log(error);
+                });
             })
-            .catch((error) => {
-                switch (error.code) {
-                case 'storage/object-not-found':
-                    console.log("doesn't exist")
-                    break;
-                case 'storage/unauthorized':
-                    console.log("doesn't have permission")
-                    break;
-                case 'storage/canceled':
-                    console.log("canceled")
-                    break;
-                    // ...
-                case 'storage/unknown':
-                    console.log("idk man")
-                    break;
-            }
-        });
+
+        }
+
+        // Create data for the user
+        function createData(){
+            var ID = userID.userID;
+            console.log(ID);
+            //push(fbRef(db, 'images'), {
+            set(fbRef(db, 'images/'+ userID.userID), {
+            })
+        }
+
+        function createImg(image){
+            var ID = userID.userID;
+            console.log(ID);
+            push(fbRef(db, 'images/'+ userID.userID), {
+                image
+            })
+        }
+
+        function duplicateImg(num, imageRef){
+            const divElement = document.getElementById("myList1");
+            var newImg = document.createElement("img");
+            newImg.style.width = "400px";
+            newImg.style.height = "240px";
+            //var newImg = imgElement.cloneNode(true);
+                newImg.id = 'firebase-img-' + num;
+                divElement.appendChild(newImg);
+
+                getDownloadURL(imageRef)
+                .then((url) => {
+                // Insert url into an <img> tag to "download"
+                console.log(`Web path ${url}`);
+                //find a place to update the html
+                document.getElementById(newImg.id).src = url;
+                })
+                .catch((error) => {
+                    switch (error.code) {
+                    case 'storage/object-not-found':
+                        console.log("doesn't exist")
+                        break;
+                    case 'storage/unauthorized':
+                        console.log("doesn't have permission")
+                        break;
+                    case 'storage/canceled':
+                        console.log("canceled")
+                        break;
+                        // ...
+                    case 'storage/unknown':
+                        console.log("idk man")
+                        break;
+                    }
+                });
+        }
       </script>
 
 </head>
 <body>
-    <img src="" id="firebase-img">
+    <div id="myList1">
+        <!--<img src="" id="firebase-img-0" width="400" height="240">-->
+    </div>
+    <p>link</p>
+    <form id="frmCreateData">
+        <button type="submit">Create Data</button>
+    </form>
 </body>
 </html>

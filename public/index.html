@@ -69,51 +69,7 @@
 
         import {
         getDatabase, ref, child, get,set,onValue,push,update,remove
-        } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
-
-        var addUserToDatabase = document.getElementById("frmCreateData");
-        if (addUserToDatabase != null){
-            
-            addUserToDatabase.addEventListener("submit", function(e){
-            e.preventDefault();
-            var username = document.getElementById("username").value;
-            var country = document.getElementById("country").value;
-            var age = document.getElementById("age").value;
-            createData(username, country, age,)
-            
-        })
-        }
-        function createData(username, country, age){
-            const userRef = ref(db, 'players');
-            const newUserRef = push(userRef);
-            set(newUserRef, {
-                username: username,
-                country: country,
-                age: age,
-            });
-        }
-
-        function getAdminData(){
-            get(playerRef).then((snapshot) => {
-                if(snapshot.exists()){
-                    console.log(snapshot.val());
-                    snapshot.forEach((childSnapshot) => {
-                        if (childSnapshot.val().admin == true) {
-                            if (childSnapshot.key == userID.userID) {
-                                console.log("access granted");
-                                window.location.href='adminPage.html';
-                            }
-                        } else {
-                            window.location.href='displayData.html'
-                        };
-                    });
-                } else{
-                    console.log("No data");
-                }
-            }).catch((error) => {
-                console.error(error);
-            })
-            }
+        } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";    
 
             function loginUser(email, password){
             signInWithEmailAndPassword(auth, email, password)
@@ -121,7 +77,7 @@
                 // Signed in 
                 const user = userCredential.user;
                 console.log("login");
-                //getAdminData();               // ...
+                window.location.href='photo.html';
             })
                 .catch((error) => {
                 const errorCode = error.code;
