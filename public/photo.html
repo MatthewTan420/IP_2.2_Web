@@ -2,7 +2,10 @@
 <html>
 <head>
     <title>Page Title</title>
-    <link href="style.css" rel="stylesheet" type="text/css" >
+    <link href="carousel.css" rel="stylesheet" type="text/css" >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Sawarabi+Gothic&display=swap" rel="stylesheet">
 
     <script type="module">
         // Import the functions you need from the SDKs you need
@@ -37,7 +40,14 @@
             getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut
             } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
             const auth = getAuth();
-                
+            
+            var frmlogUser = document.getElementById("frmlogOut");
+            if (frmlogUser != null){
+                frmlogUser.addEventListener("submit", function(e){
+                e.preventDefault();
+                LogOutUser();
+            });
+            }
                 
             //listens for changes in the authentication state.
             onAuthStateChanged(auth, (currentUser) => {
@@ -56,6 +66,16 @@
                     console.log(`ErrorCode: ${errorCode} -> Message: ${errorMessage}`);
                 }
             });
+
+            function LogOutUser(){
+                signOut(auth).then(() => {
+                    // Sign-out successful.
+                    window.location.href='index.html';
+                }).catch((error) => {
+                    // An error happened.
+                });
+            }
+            
 
         import { getStorage, ref, getDownloadURL, listAll } from
             "https://www.gstatic.com/firebasejs/10.6.0/firebase-storage.js"
@@ -145,51 +165,121 @@
                 image
             })
         }
+    // Get the parent div
+const divElement = document.getElementById("myList1");
 
-        function duplicateImg(num, imageRef){
-            const divElement = document.getElementById("myList1");
-            var newImg = document.createElement("img");
-            newImg.style.width = "400px";
-            newImg.style.height = "240px";
-            //var newImg = imgElement.cloneNode(true);
-                newImg.id = 'firebase-img-' + num;
-                divElement.appendChild(newImg);
+    divElement.style.display = "flex";
+    divElement.style.flexWrap = "wrap";
+    divElement.style.justifyContent = "center"; 
+    divElement.style.alignItems = "center";
+    divElement.style.height = "350px";
+    divElement.style.overflowY = "scroll";
 
-                getDownloadURL(imageRef)
-                .then((url) => {
-                // Insert url into an <img> tag to "download"
-                console.log(`Web path ${url}`);
-                //find a place to update the html
-                document.getElementById(newImg.id).src = url;
-                })
-                .catch((error) => {
-                    switch (error.code) {
-                    case 'storage/object-not-found':
-                        console.log("doesn't exist")
-                        break;
-                    case 'storage/unauthorized':
-                        console.log("doesn't have permission")
-                        break;
-                    case 'storage/canceled':
-                        console.log("canceled")
-                        break;
-                        // ...
-                    case 'storage/unknown':
-                        console.log("idk man")
-                        break;
-                    }
-                });
+    // Hide scrollbar for Chrome, Safari and Opera
+    divElement.style.scrollbarWidth = "none"; 
+    divElement.style.msOverflowStyle = "none";  
+
+// For Chrome, Safari and Opera
+divElement.style.overflow = "-moz-scrollbars-none";
+divElement.style.WebkitOverflowScrolling = "touch";
+
+    function duplicateImg(num, imageRef){
+    const divElement = document.getElementById("myList1");
+
+    // Create a new div for the image and the download button
+    var newDiv = document.createElement("div");
+    newDiv.style.display = "flex";
+    newDiv.style.flexDirection = "column";
+    newDiv.style.alignItems = "center";
+
+    // Create the image
+    var newImg = document.createElement("img");
+    newImg.style.width = "400px";
+    newImg.style.height = "240px";
+    newImg.style.borderRadius = "50px"; 
+    newImg.style.background = "#FFF"; 
+    newImg.style.backgroundSize = "100px";
+    newImg.style.margin = "10px"; 
+    newImg.style.marginTop = "50px"; 
+    newImg.style.padding = "20px";
+    newImg.id = 'firebase-img-' + num;
+    newDiv.appendChild(newImg);
+    
+
+    var downloadLink = document.createElement("a");
+    downloadLink.download = ""; 
+    downloadLink.href = ""; 
+
+    // Create the download button
+    var newButton = document.createElement("button");
+    newButton.className = "custom-btn btn-12";
+    var span1 = document.createElement("span");
+    span1.innerText = "Download";
+    var span2 = document.createElement("span");
+    span2.innerText = "Save It";
+    newButton.appendChild(span1);
+    newButton.appendChild(span2);
+    newDiv.appendChild(newButton);
+
+     downloadLink.appendChild(newButton);
+    newDiv.appendChild(downloadLink);
+
+    divElement.appendChild(newDiv);
+
+    
+
+    getDownloadURL(imageRef)
+    .then((url) => {
+        console.log(`Web path ${url}`);
+        document.getElementById(newImg.id).src = url;
+
+        // Set the download link
+        downloadLink.href = url;
+        downloadLink.download = 'image-' + num + '.jpg';
+
+        // Add event listener to the image
+       
+    })
+    .catch((error) => {
+        switch (error.code) {
+        case 'storage/object-not-found':
+            console.log("doesn't exist")
+            break;
+        case 'storage/unauthorized':
+            console.log("doesn't have permission")
+            break;
+        case 'storage/canceled':
+            console.log("canceled")
+            break;
+        case 'storage/unknown':
+            console.log("idk man")
+            break;
         }
+    });
+}
+  
       </script>
 
 </head>
 <body>
+<h1>Gallery</h1>
+<div class = 'logout'>
+<form id="frmlogOut">
+    <button class="custom-btn btn-12"><span>Goodbye</span><span>Logout</span></button>
+</form>
+</div>
+    <div class = "gallery">
+        
     <div id="myList1">
         <!--<img src="" id="firebase-img-0" width="400" height="240">-->
     </div>
-    <p>link</p>
+   
+</div>
+<div class = "load">
     <form id="frmCreateData">
-        <button type="submit">Create Data</button>
+        <button class="custom-btn btn-12"><span>Image</span><span>Load</span></button>
     </form>
+</div>
+
 </body>
 </html>

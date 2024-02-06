@@ -1,0 +1,51 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: url('img/image.png') no-repeat center center fixed; 
+    background-size: cover;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+    padding: 40px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center align the text, if that's in your design */
+}
+
+.login-form .input-group {
+    margin-bottom: 20px;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px; /* Spacing after label */
+    margin-bottom: 16px; /* Spacing before next input */
+}
+
+.btn-login {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #4CAF50; /* Adjust the color to match your design */
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    background: #45a049;
+}
