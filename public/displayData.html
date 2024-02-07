@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Title</title>
+    <link href="carousel.css" rel="stylesheet" type="text/css" >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&display=swap" rel="stylesheet">
+
+    <script type="module">
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    var adminBtn = document.getElementById("btn-admin");
+    if (adminBtn) {
+        adminBtn.addEventListener("click", getAdminData);
+        console.log('work');
+    } else {
+        console.log('Button with id "btn-admin" not found');
+    }
+});
+
+function getAdminData(){
+    window.location.href='leaderboard.html';
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    var adminBtn = document.getElementById("btn-logout");
+    if (adminBtn) {
+        adminBtn.addEventListener("click", logOutt);
+        console.log('work');
+    } else {
+        console.log('Button with id "btn-admin" not found');
+    }
+});
+
+function logOutt(){
+    window.location.href='index.html';
+}
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBrcdSOA1oClARGoG6Y3w6GgMAr_Awtduw",
+            authDomain: "sungai-buloh.firebaseapp.com",
+            databaseURL: "https://sungai-buloh-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "sungai-buloh",
+            storageBucket: "sungai-buloh.appspot.com",
+            messagingSenderId: "431778937928",
+            appId: "1:431778937928:web:161d4237ff3935ac272c7d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        const db = getDatabase();
+        const playerRef = ref(db, "players");
+
+        class userID { 
+            static userID = "";
+        }
+
+        import {
+            getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut
+            } from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+            const auth = getAuth();
+            var frmCreateUser = document.getElementById("frmCreateUser");
+            if (frmCreateUser != null){
+                frmCreateUser.addEventListener("submit", function(e){
+                e.preventDefault();
+                var email = document.getElementById("email").value;
+                var password = document.getElementById("password").value;
+                createUser(email, password);
+                console.log("email" + email + "password" + password);
+            });
+            }
+            function createUser(email, password){
+                console.log("creating the user");
+                createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential)=>{
+                const user = userCredential.user;
+                console.log("created user ... " + JSON.stringify(userCredential));
+                console.log("User is now signed in ");
+                window.location.assign('createUser.html');
+            }).catch((error)=>{
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(`ErrorCode: ${errorCode} -> Message: ${errorMessage}`);
+            });
+
+        }
+
+        // Based on the logged in user, get the data from Firebase
+        onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+        // User is signed in
+        const uid = currentUser.uid;
+        console.log(`(OnAuthStateChanged) Current user is logged in: ${currentUser.email} :: ${currentUser.uid}`)
+
+        // Call getPlayerData with the user's ID
+        getPlayerData(uid, {
+            'username': 'name',
+            'age': 'ages',
+            'img': 'image',
+            'rubbish': 'rubbishes',
+            'distance': 'distances',
+            'occupation': 'occupations'
+        });
+    } else {
+        // User is not signed in
+        console.log('User is not signed in');
+    }
+});
+
+// Loop through and display the data in the <h2 id> elements
+function getPlayerData(uid, propertyToElementIdMap){
+    // Create a reference to the user's data in Firebase
+    const userRef = ref(db, 'players/' + uid);
+
+    get(userRef).then((snapshot) => {
+        if(snapshot.exists()){
+            // Get all the data for the user
+            let userData = snapshot.val();
+
+            // Display the data
+            for (let property in propertyToElementIdMap) {
+                if (property in userData) {
+                    // Select the <h2> element
+                    let h2Element = document.getElementById(propertyToElementIdMap[property]);
+
+                    // Display the data in the <h2> element
+                    h2Element.innerText = userData[property];
+                }
+            }
+        } else{
+            console.log("No data");
+        }
+    }).catch((error) => {
+        console.error(error);
+    })
+}
+
+var frmlogUser = document.getElementById("frmlogOut");
+            if (frmlogUser != null){
+                frmlogUser.addEventListener("submit", function(e){
+                e.preventDefault();
+                LogOutUser();
+            });
+            }
+
+    function LogOutUser(){
+            signOut(auth).then(() => {
+            // Sign-out successful.
+            window.location.href='index.html';
+                }).catch((error) => {
+                    // An error happened.
+                });
+            }
+
+
+        import {
+        getDatabase, ref, child, get,set,onValue,push,update,remove
+        } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+
+        /*var readBtn = document
+            .getElementById("btn-read")
+            .addEventListener("click", getPlayerData);*/
+   
+        document.getElementById("button").addEventListener('click', function() {
+        window.location.href = 'photo.html';
+    });
+
+      
+            
+      </script>
+</head>
+<body>
+
+    <h1>Info</h1>
+    <div class = 'logout2'>
+    <button id = "button" class="custom-btn btn-12"><span>Photos</span><span>View</span></button>
+    
+    <form id="frmlogOut">
+        <button class="custom-btn btn-12"><span>Goodbye</span><span>Logout</span></button>
+    </form>
+</div>
+    
+    <div class = "userinfo">
+    <div class = 'center'>
+    <div class = 'info'>
+    <div class = 'name'>
+        <h2><u>Name:</u></h2>
+        <h2 id = 'name'></h2>
+    </div>
+    <div class = 'ages'>
+        <h2><u>Age:</u></h2>
+        <h2 id = 'ages'></h2>
+    </div>
+    <div class = 'image'>
+        <h2><u>Images Taken:</u></h2> 
+        <h2 id = 'image'></h2>
+    </div>
+    </div>
+      
+    
+    <div class = 'info2'>
+    <div class ="rubbishes">
+        <h2><u>Rubbish Collected:</u></h2>
+        <h2 id = 'rubbishes'></h2>
+    </div>
+    <div class = "distances">
+        <h2><u>Total Distance:</u></h2>
+        <h2 id = 'distances'></h2>
+    </div>
+    <div class = "occupations">
+        <h2><u>Occupation:</u></h2>
+        <h2 id = 'occupations'></h2>
+    </div>
+    </div>
+    </div>
+    </div>
+</body>
+</html>
